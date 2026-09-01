@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Demonstração acadêmica do sistema de avaliações digitais e correção automática.">
+  <title>Avaliações Digitais | Painel de Aprendizagem</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#inicio" aria-label="Página inicial">
+      <span class="brand-mark">AD</span>
+      <span>Avaliações Digitais</span>
+    </a>
+    <nav aria-label="Navegação principal">
+      <a href="#projeto">Projeto</a>
+      <a href="#avaliacoes">Avaliações</a>
+      <a href="#painel">Painel</a>
+      <a href="/docs" target="_blank" rel="noreferrer">API</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero-copy">
+        <p class="eyebrow">Atividade Extensionista III · Engenharia de Software</p>
+        <h1>Provas digitais com correção automática e decisões orientadas por dados.</h1>
+        <p class="lead">Demonstração funcional do fluxo de aplicação, processamento e análise de avaliações técnicas. Esta versão pública utiliza somente dados fictícios e anonimizados.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#painel">Explorar indicadores</a>
+          <a class="button secondary" href="#avaliacoes">Acessar avaliações</a>
+        </div>
+      </div>
+      <aside class="hero-card" aria-label="Resumo do projeto">
+        <span class="status"><i></i> Demonstração disponível</span>
+        <dl>
+          <div><dt>ODS principal</dt><dd>04 · Educação de qualidade</dd></div>
+          <div><dt>Autor</dt><dd>Gregory Kim Almeida da Silva</dd></div>
+          <div><dt>Privacidade</dt><dd>Base anonimizada</dd></div>
+        </dl>
+      </aside>
+    </section>
+
+    <section class="section" id="projeto">
+      <div class="section-heading">
+        <p class="eyebrow">Como funciona</p>
+        <h2>Da resposta ao indicador</h2>
+        <p>O protótipo reproduz, fora do ambiente corporativo, a lógica usada para transformar respostas em informações de aprendizagem.</p>
+      </div>
+      <div class="flow" aria-label="Fluxo da solução">
+        <article><span>01</span><h3>Aplicação</h3><p>O participante acessa a prova digital pelo link ou QR Code.</p></article>
+        <b aria-hidden="true">→</b>
+        <article><span>02</span><h3>Processamento</h3><p>As respostas são padronizadas, corrigidas e armazenadas.</p></article>
+        <b aria-hidden="true">→</b>
+        <article><span>03</span><h3>Análise</h3><p>Os indicadores revelam aproveitamento e pontos de reforço.</p></article>
+      </div>
+    </section>
+
+    <section class="section muted" id="avaliacoes">
+      <div class="section-heading split">
+        <div><p class="eyebrow">Provas demonstrativas</p><h2>Avaliações disponíveis</h2></div>
+        <p>Os links públicos do Microsoft Forms serão ativados após a criação das cópias sem conteúdo confidencial.</p>
+      </div>
+      <div class="assessment-grid" id="assessmentCards"><p class="loading">Carregando avaliações…</p></div>
+    </section>
+
+    <section class="section dashboard" id="painel">
+      <div class="section-heading split">
+        <div><p class="eyebrow">Painel público</p><h2>Indicadores de aprendizagem</h2></div>
+        <div class="filters">
+          <label>Avaliação<select id="assessmentFilter"><option value="">Todas</option></select></label>
+          <button id="refreshButton" class="button compact">Atualizar</button>
+        </div>
+      </div>
+
+      <div class="kpis" aria-live="polite">
+        <article><span>Respostas</span><strong id="responsesKpi">—</strong><small>registros processados</small></article>
+        <article><span>Média geral</span><strong id="averageKpi">—</strong><small>percentual de acertos</small></article>
+        <article><span>Aprovação</span><strong id="approvalKpi">—</strong><small>taxa consolidada</small></article>
+        <article><span>Situação</span><strong id="approvedKpi">—</strong><small id="statusDetail">aprovados · — reprovados</small></article>
+      </div>
+
+      <div class="dashboard-grid">
+        <article class="panel">
+          <div class="panel-title"><div><p class="eyebrow">Comparativo</p><h3>Aproveitamento por avaliação</h3></div><span>Média (%)</span></div>
+          <div class="bars" id="assessmentBars"></div>
+        </article>
+        <article class="panel approval-panel">
+          <div class="panel-title"><div><p class="eyebrow">Resultado</p><h3>Aprovados e reprovados</h3></div></div>
+          <div class="donut" id="approvalDonut"><div><strong>—</strong><span>aprovação</span></div></div>
+          <div class="legend"><span><i class="approved"></i>Aprovados</span><span><i class="failed"></i>Reprovados</span></div>
+        </article>
+      </div>
+
+      <article class="panel table-panel">
+        <div class="panel-title"><div><p class="eyebrow">Rastreabilidade</p><h3>Resultados anonimizados</h3></div><span id="tableCount">0 registros</span></div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Participante</th><th>Avaliação</th><th>Cliente</th><th>Instrutor</th><th>Nota</th><th>Status</th><th>Data</th></tr></thead>
+            <tbody id="resultsTable"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Avaliações Digitais Inteligentes</strong> · Projeto acadêmico demonstrativo</p>
+    <p>Nenhum dado pessoal ou corporativo é exibido nesta aplicação.</p>
+  </footer>
+  <script src="/assets/app.js" defer></script>
+</body>
+</html>
