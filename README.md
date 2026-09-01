@@ -48,7 +48,10 @@ docker compose up -d --build
 ```
 
 Com um domínio apontado para o servidor, o Caddy provisiona HTTPS automaticamente.
-Sem domínio, use `SITE_ADDRESS=http://46.224.183.60` para a primeira validação.
+Sem domínio próprio, use um endereço sslip.io (ex.: `SITE_ADDRESS=avalia.46-224-183-60.sslip.io`,
+sem `http://`), que resolve para o IP do servidor e permite HTTPS automático via Let's Encrypt.
+
+O site está publicado em https://avalia.46-224-183-60.sslip.io/
 
 ## Configurar links do Forms
 
