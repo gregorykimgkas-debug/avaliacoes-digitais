@@ -1,4 +1,4 @@
-# Avaliações Digitais Inteligentes
+# AvalIA
 
 Demonstração pública e anonimizada do projeto de aplicação, correção e análise de
 provas digitais desenvolvido por Gregory Kim Almeida da Silva para a Atividade
