@@ -11,7 +11,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .database import get_db
-from .models import Assessment, Submission
+from .models import Assessment, Question, Submission
 from .seed import seed_database
 
 
@@ -57,9 +57,77 @@ def assessments(db: Session = Depends(get_db)):
             "equipment": row.equipment,
             "form_url": row.form_url,
             "passing_score": row.passing_score,
+            "has_exam": len(row.questions) > 0,
         }
         for row in rows
     ]
+
+
+@app.get("/api/assessments/{code}/exam")
+def get_exam(code: str, db: Session = Depends(get_db)):
+    assessment = db.scalar(select(Assessment).where(Assessment.code == code))
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Avaliação não encontrada")
+    if not assessment.questions:
+        raise HTTPException(status_code=404, detail="Esta avaliação não possui prova interna")
+    return {
+        "code": assessment.code,
+        "title": assessment.title,
+        "equipment": assessment.equipment,
+        "passing_score": assessment.passing_score,
+        "questions": [
+            {"id": q.id, "order": q.order, "text": q.text, "options": q.options}
+            for q in assessment.questions
+        ],
+    }
+
+
+class ExamAnswer(BaseModel):
+    question_id: int
+    selected_index: int = Field(ge=0)
+
+
+class ExamSubmission(BaseModel):
+    participant_name: str = Field(min_length=2, max_length=100)
+    client: str = Field(min_length=2, max_length=100, default="Demonstração")
+    instructor: str = Field(min_length=2, max_length=100, default="Instrutor demonstrativo")
+    answers: list[ExamAnswer]
+
+
+@app.post("/api/assessments/{code}/exam")
+def submit_exam(code: str, payload: ExamSubmission, db: Session = Depends(get_db)):
+    assessment = db.scalar(select(Assessment).where(Assessment.code == code))
+    if not assessment:
+        raise HTTPException(status_code=404, detail="Avaliação não encontrada")
+    questions = {q.id: q for q in assessment.questions}
+    if not questions:
+        raise HTTPException(status_code=400, detail="Esta avaliação não possui prova interna")
+
+    correct = 0
+    for answer in payload.answers:
+        question = questions.get(answer.question_id)
+        if question is not None and answer.selected_index == question.correct_index:
+            correct += 1
+    total = len(questions)
+    score = round(correct / total * 100, 1)
+
+    item = Submission(
+        assessment_id=assessment.id,
+        participant_code=payload.participant_name,
+        client=payload.client,
+        instructor=payload.instructor,
+        score=score,
+        submitted_at=datetime.now(),
+    )
+    db.add(item)
+    db.commit()
+
+    return {
+        "score": score,
+        "correct": correct,
+        "total": total,
+        "status": "Aprovado" if score >= assessment.passing_score else "Reprovado",
+    }
 
 
 @app.get("/api/dashboard")
@@ -156,3 +224,7 @@ app.mount("/assets", StaticFiles(directory=FRONTEND / "assets"), name="assets")
 def index():
     return FileResponse(FRONTEND / "index.html")
 
+
+@app.get("/prova/{code}", include_in_schema=False)
+def prova_page(code: str):
+    return FileResponse(FRONTEND / "prova.html")

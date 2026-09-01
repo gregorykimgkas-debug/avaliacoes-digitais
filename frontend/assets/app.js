@@ -21,9 +21,11 @@ function renderAssessments(items) {
       <span class="code">${item.code}</span>
       <h3>${item.title}</h3>
       <p>${item.equipment} · Nota mínima ${formatPercent(item.passing_score)}</p>
-      ${item.form_url
-        ? `<a class="button" href="${item.form_url}" target="_blank" rel="noreferrer">Abrir Microsoft Forms ↗</a>`
-        : `<span class="button disabled" aria-disabled="true">Link público em preparação</span>`}
+      ${item.has_exam
+        ? `<a class="button primary" href="/prova/${item.code}">Fazer prova ↗</a>`
+        : item.form_url
+          ? `<a class="button" href="${item.form_url}" target="_blank" rel="noreferrer">Abrir Microsoft Forms ↗</a>`
+          : `<span class="button disabled" aria-disabled="true">Link público em preparação</span>`}
     </article>
   `).join("");
 
